@@ -1,12 +1,16 @@
-export const fetchProduct = async (produto) => {
+export const fetchProduct = async () => {
+
+};
+const URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$';
+export const fetchProductsList = async (produto) => {
   if (!produto) {
     throw new Error('Termo de busca não informado');
-  } else {
-    const retorno = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=$${produto}`);
-    console.log(retorno);
   }
-};
-
-export const fetchProductsList = () => {
-  // seu código aqui
+  try {
+    const retorno = await fetch(URL + produto);
+    const data = await retorno.json();
+    return data.results;
+  } catch (erro) {
+    return erro.message;
+  }
 };
