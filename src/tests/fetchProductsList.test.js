@@ -19,7 +19,8 @@ describe('Teste a função fetchProductsList', async () => {
   });
 
   it("Teste se o retorno da função fetchProductsList com o argumento 'computador' é uma estrutura de dados igual ao objeto computadorSearch, que já está importado no arquivo.", async () => {
-    expect(await fetchProductsList('computador')).toEqual(computadorSearch);
+    data = await fetchProductsList('computador')
+    expect(data).toEqual(computadorSearch);
   });
     it("Teste se, ao chamar a função fetchProductsList sem argumento, retorna um erro com a mensagem: 'Termo de busca não informado'.", async () => {
       expect(await fetchProductsList()).toThrow('Termo de busca não informado')
