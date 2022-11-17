@@ -45,6 +45,25 @@ products.addEventListener('click', async (param) => {
   const producto = await fetchProduct(ID);
   cart.appendChild(createCartProductElement(producto));
 });
+
+let contador = 0;
+products.addEventListener('click', async (elem) => {
+  const price = elem.target.parentNode.lastChild.previousSibling.lastChild.textContent;
+  const preco = parseFloat(price);
+  contador += preco;
+  const total = document.querySelector('.total-price');
+  total.innerHTML = contador;
+});
+
+cart.addEventListener('click', (para) => {
+  const priceTwo = para
+    .target.parentNode.lastChild.previousSibling.lastChild.lastChild.textContent;
+  const precoTwo = parseFloat(priceTwo).toFixed(2);
+  contador -= precoTwo;
+  const total = document.querySelector('.total-price');
+  total.innerHTML = contador;
+});
+
 window.onload = async () => {
   getSavedCartIDs().map(async (element) => {
     const elementos = await fetchProduct(element);
