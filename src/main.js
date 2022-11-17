@@ -7,6 +7,7 @@ import { getSavedCartIDs, saveCartID } from './helpers/cartFunctions';
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const products = document.querySelector('.products');
 const cart = document.querySelector('.cart__products');
+const total = document.querySelector('.total-price');
 
 const criaLoading = () => {
   const divCarregando = document.querySelector('#carregando');
@@ -47,12 +48,14 @@ products.addEventListener('click', async (param) => {
 });
 
 let contador = 0;
+
 products.addEventListener('click', async (elem) => {
   const price = elem.target.parentNode.lastChild.previousSibling.lastChild.textContent;
   const preco = parseFloat(price);
   contador += preco;
-  const total = document.querySelector('.total-price');
-  total.innerHTML = contador;
+  const totalTwo = JSON.stringify(contador);
+  localStorage.setItem('preco', totalTwo);
+  total.innerHTML = contador.toFixed(2);
 });
 
 cart.addEventListener('click', (para) => {
@@ -60,8 +63,9 @@ cart.addEventListener('click', (para) => {
     .target.parentNode.lastChild.previousSibling.lastChild.lastChild.textContent;
   const precoTwo = parseFloat(priceTwo).toFixed(2);
   contador -= precoTwo;
-  const total = document.querySelector('.total-price');
-  total.innerHTML = contador;
+  const totalTwo = JSON.stringify(contador);
+  localStorage.setItem('preco', totalTwo);
+  total.innerHTML = contador.toFixed(2);
 });
 
 window.onload = async () => {
@@ -69,6 +73,9 @@ window.onload = async () => {
     const elementos = await fetchProduct(element);
     Promise.all(cart.appendChild(createCartProductElement(elementos)));
   });
+  if (localStorage.getItem('preco')) {
+    total.innerHTML = JSON.parse(localStorage.getItem('preco'));
+  }
 };
 
 await createProducts('computador');
