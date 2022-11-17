@@ -1,10 +1,12 @@
 import { searchCep } from './helpers/cepFunctions';
 import './style.css';
-import { fetchProductsList } from './helpers/fetchFunctions';
-import { createProductElement } from './helpers/shopFunctions';
+import { fetchProduct, fetchProductsList } from './helpers/fetchFunctions';
+import { createCartProductElement, createProductElement } from './helpers/shopFunctions';
+import { saveCartID } from './helpers/cartFunctions';
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 const products = document.querySelector('.products');
+const cart = document.querySelector('.cart__products');
 
 const criaLoading = () => {
   const divCarregando = document.querySelector('#carregando');
@@ -37,5 +39,11 @@ const createProducts = async (param) => {
     return createErrorText();
   }
 };
+products.addEventListener('click', async (param) => {
+  const ID = param.target.parentNode.firstChild.innerText;
+  saveCartID(ID);
+  const producto = await fetchProduct(ID);
+  cart.appendChild(createCartProductElement(producto));
+});
 
 await createProducts('computador');
