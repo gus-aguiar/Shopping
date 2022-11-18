@@ -40,46 +40,47 @@ const createProducts = async (param) => {
     return createErrorText();
   }
 };
+
+const reduze = (elem) => {
+  const reduce = elem.reduce((acc, cur) => acc + cur);
+  return reduce;
+};
+const allPrice = async () => {
+  const pega = getSavedCartIDs();
+  const precoArray = [];
+  pega.forEach(async (param) => {
+    const { price } = await fetchProduct(param);
+    precoArray.push(price);
+    total.innerHTML = reduze(precoArray);
+  });
+};
 products.addEventListener('click', async (param) => {
-  const ID = param.target.parentNode.firstChild.innerText;
-  saveCartID(ID);
-  const producto = await fetchProduct(ID);
-  cart.appendChild(createCartProductElement(producto));
-});
-
-const contador = [];
-
-products.addEventListener('click', async (elem) => {
-  total.innerHTML = 0;
-  const price = elem.target.parentNode.lastChild.previousSibling.lastChild.textContent;
-  const preco = parseFloat(price);
-  contador.push(preco);
-  const totalTwo = JSON.stringify(contador);
-  localStorage.setItem('preco', totalTwo);
-  const contadorSoma = contador.reduce((acc, cur) => (acc + cur));
-  total.innerHTML = contadorSoma.toFixed(2);
+  const nomeClasse = param.target.className;
+  if (nomeClasse === 'product__add') {
+    const ID = param.target.parentNode.firstChild.innerText;
+    saveCartID(ID);
+    const producto = await fetchProduct(ID);
+    cart.appendChild(createCartProductElement(producto));
+    allPrice();
+  }
 });
 
 cart.addEventListener('click', (para) => {
-  total.innerHTML = 0;
-  const priceTwo = para
-    .target.parentNode.lastChild.previousSibling.lastChild.lastChild.textContent;
-  const precoTwo = parseFloat(priceTwo).toFixed(2);
-  contador.push((precoTwo * (-1)));
-  const totalTwo = JSON.stringify(contador);
-  localStorage.setItem('preco', totalTwo);
-  const contadorSoma = contador.reduce((acc, cur) => (acc + cur));
-  total.innerHTML = contadorSoma;
+  const priceTwo = para.target.parentNode.lastChild.lastChild.innerHTML;
+  console.log(priceTwo);
+  const priceTwoNumber = Number(priceTwo);
+  const precoTwo = Number(total.innerHTML);
+  const contadorSoma = precoTwo - priceTwoNumber;
+  total.innerHTML = '';
+  total.innerHTML = contadorSoma.toFixed(2);
 });
 
 window.onload = async () => {
   getSavedCartIDs().map(async (element) => {
     const elementos = await fetchProduct(element);
-    Promise.all(cart.appendChild(createCartProductElement(elementos)));
+    Promise.all([cart.appendChild(createCartProductElement(elementos))]);
   });
-  if (localStorage.getItem('preco')) {
-    total.innerHTML = JSON.parse(localStorage.getItem('preco'));
-  }
+  allPrice();
 };
 
 await createProducts('computador');
