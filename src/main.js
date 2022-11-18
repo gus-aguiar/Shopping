@@ -47,25 +47,29 @@ products.addEventListener('click', async (param) => {
   cart.appendChild(createCartProductElement(producto));
 });
 
-let contador = 0;
+const contador = [];
 
 products.addEventListener('click', async (elem) => {
+  total.innerHTML = 0;
   const price = elem.target.parentNode.lastChild.previousSibling.lastChild.textContent;
   const preco = parseFloat(price);
-  contador += preco;
+  contador.push(preco);
   const totalTwo = JSON.stringify(contador);
   localStorage.setItem('preco', totalTwo);
-  total.innerHTML = contador.toFixed(2);
+  const contadorSoma = contador.reduce((acc, cur) => (acc + cur));
+  total.innerHTML = contadorSoma.toFixed(2);
 });
 
 cart.addEventListener('click', (para) => {
+  total.innerHTML = 0;
   const priceTwo = para
     .target.parentNode.lastChild.previousSibling.lastChild.lastChild.textContent;
   const precoTwo = parseFloat(priceTwo).toFixed(2);
-  contador -= precoTwo;
+  contador.push((precoTwo * (-1)));
   const totalTwo = JSON.stringify(contador);
   localStorage.setItem('preco', totalTwo);
-  total.innerHTML = contador.toFixed(2);
+  const contadorSoma = contador.reduce((acc, cur) => (acc + cur));
+  total.innerHTML = contadorSoma;
 });
 
 window.onload = async () => {
