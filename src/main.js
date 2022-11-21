@@ -67,7 +67,6 @@ products.addEventListener('click', async (param) => {
 
 cart.addEventListener('click', (para) => {
   const priceTwo = para.target.parentNode.lastChild.lastChild.innerHTML;
-  console.log(priceTwo);
   const priceTwoNumber = Number(priceTwo);
   const precoTwo = Number(total.innerHTML);
   const contadorSoma = precoTwo - priceTwoNumber;
